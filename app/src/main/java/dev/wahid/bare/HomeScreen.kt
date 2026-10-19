@@ -1,6 +1,7 @@
 package dev.wahid.bare
 
 import android.text.format.DateFormat
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -41,6 +42,8 @@ fun HomeScreen(
 ) {
     var appToHide by remember { mutableStateOf<AppEntry?>(null) }
     var showAllApps by remember { mutableStateOf(false) }
+
+    BackHandler {}
 
     Surface(
         colors = SurfaceDefaults.colors(containerColor = Color.Black, contentColor = Color.White),
