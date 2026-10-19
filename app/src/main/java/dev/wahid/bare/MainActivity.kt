@@ -18,9 +18,18 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val apps = viewModel.apps.collectAsStateWithLifecycle().value
+            val hiddenApps = viewModel.hiddenApps.collectAsStateWithLifecycle().value
             val hdmi1InputId = viewModel.hdmi1InputId.collectAsStateWithLifecycle().value
             MaterialTheme(colorScheme = darkColorScheme()) {
-                HomeScreen(apps = apps, hdmi1InputId = hdmi1InputId, onOpen = ::open, onSwitchInput = ::switchInput)
+                HomeScreen(
+                    apps = apps,
+                    hiddenApps = hiddenApps,
+                    hdmi1InputId = hdmi1InputId,
+                    onOpen = ::open,
+                    onHide = viewModel::hide,
+                    onUnhide = viewModel::unhide,
+                    onSwitchInput = ::switchInput,
+                )
             }
         }
     }

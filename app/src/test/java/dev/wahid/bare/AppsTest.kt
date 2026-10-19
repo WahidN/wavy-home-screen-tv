@@ -21,4 +21,19 @@ class AppsTest {
 
         assertEquals(listOf("Netflix"), apps.forGrid("dev.wahid.bare").map { it.label })
     }
+
+    @Test
+    fun `id is package and activity`() {
+        assertEquals("com.netflix/com.netflix.Main", app("com.netflix", "Netflix").id)
+    }
+
+    @Test
+    fun `splits hidden apps out and keeps the order`() {
+        val apps = listOf(app("a", "Kodi"), app("b", "Netflix"), app("c", "YouTube"))
+
+        val (visible, hidden) = apps.splitHidden(setOf("b/b.Main"))
+
+        assertEquals(listOf("Kodi", "YouTube"), visible.map { it.label })
+        assertEquals(listOf("Netflix"), hidden.map { it.label })
+    }
 }

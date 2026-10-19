@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -31,10 +32,16 @@ import java.util.Date
 @Composable
 fun HomeScreen(
     apps: List<AppEntry>,
+    hiddenApps: List<AppEntry>,
     hdmi1InputId: String?,
     onOpen: (AppEntry) -> Unit,
+    onHide: (AppEntry) -> Unit,
+    onUnhide: (AppEntry) -> Unit,
     onSwitchInput: (String) -> Unit,
 ) {
+    var appToHide by remember { mutableStateOf<AppEntry?>(null) }
+    var showAllApps by remember { mutableStateOf(false) }
+
     Surface(
         colors = SurfaceDefaults.colors(containerColor = Color.Black, contentColor = Color.White),
         modifier = Modifier.fillMaxSize(),
@@ -48,8 +55,35 @@ fun HomeScreen(
                     }
                 }
             }
-            AppRow(apps = apps, onOpen = onOpen)
+            AppRow(
+                apps = apps,
+                onOpen = onOpen,
+                onLongPress = { appToHide = it },
+                onOpenAllApps = { showAllApps = true },
+            )
         }
+    }
+
+    appToHide?.let { app ->
+        HideAppDialog(
+            app = app,
+            onHide = {
+                onHide(app)
+                appToHide = null
+            },
+            onDismiss = { appToHide = null },
+        )
+    }
+
+    if (showAllApps) {
+        AllAppsScreen(
+            apps = apps,
+            hiddenApps = hiddenApps,
+            onOpen = onOpen,
+            onHide = onHide,
+            onUnhide = onUnhide,
+            onDismiss = { showAllApps = false },
+        )
     }
 }
 
