@@ -10,8 +10,6 @@ data class AppEntry(
     val packageName: String,
     val activityName: String,
     val label: String,
-    val banner: ImageBitmap?,
-    // Only loaded when there is no banner, to keep memory low.
     val icon: ImageBitmap?,
 )
 
@@ -25,13 +23,11 @@ fun loadTvApps(context: Context): List<AppEntry> {
     return pm.queryIntentActivities(tvLauncherIntent, 0)
         .map { it.activityInfo }
         .map { activity ->
-            val banner = activity.loadBanner(pm)?.toBitmap()?.asImageBitmap()
             AppEntry(
                 packageName = activity.packageName,
                 activityName = activity.name,
                 label = activity.loadLabel(pm).toString(),
-                banner = banner,
-                icon = if (banner == null) activity.loadIcon(pm).toBitmap().asImageBitmap() else null,
+                icon = activity.loadIcon(pm).toBitmap().asImageBitmap(),
             )
         }
         .forGrid(context.packageName)

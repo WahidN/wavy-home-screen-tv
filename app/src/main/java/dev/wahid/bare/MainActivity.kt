@@ -18,7 +18,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val apps = viewModel.apps.collectAsStateWithLifecycle().value
             MaterialTheme(colorScheme = darkColorScheme()) {
-                AppGrid(apps = apps, onOpen = ::open)
+                HomeScreen(apps = apps, onOpen = ::open)
             }
         }
     }

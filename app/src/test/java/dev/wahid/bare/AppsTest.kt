@@ -6,7 +6,7 @@ import org.junit.Test
 class AppsTest {
 
     private fun app(packageName: String, label: String) =
-        AppEntry(packageName, "$packageName.Main", label, banner = null, icon = null)
+        AppEntry(packageName, "$packageName.Main", label, icon = null)
 
     @Test
     fun `sorts by label ignoring case`() {

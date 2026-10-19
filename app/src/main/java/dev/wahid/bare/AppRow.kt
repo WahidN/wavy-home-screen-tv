@@ -1,91 +1,90 @@
 package dev.wahid.bare
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.tv.material3.Card
+import androidx.tv.material3.Border
+import androidx.tv.material3.ClickableSurfaceDefaults
 import androidx.tv.material3.MaterialTheme
+import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
 
-@Composable
-fun AppGrid(apps: List<AppEntry>, onOpen: (AppEntry) -> Unit) {
-    val firstTile = remember { FocusRequester() }
+private val CircleSize = 72.dp
 
-    LazyVerticalGrid(
-        columns = GridCells.Adaptive(minSize = 200.dp),
-        contentPadding = PaddingValues(48.dp),
-        horizontalArrangement = Arrangement.spacedBy(24.dp),
-        verticalArrangement = Arrangement.spacedBy(24.dp),
-        modifier = Modifier.fillMaxSize(),
+@Composable
+fun AppRow(apps: List<AppEntry>, onOpen: (AppEntry) -> Unit, modifier: Modifier = Modifier) {
+    val firstApp = remember { FocusRequester() }
+
+    LazyRow(
+        contentPadding = PaddingValues(horizontal = 48.dp, vertical = 12.dp),
+        horizontalArrangement = Arrangement.spacedBy(20.dp),
+        modifier = modifier,
     ) {
         itemsIndexed(apps, key = { _, app -> app.packageName + "/" + app.activityName }) { index, app ->
-            AppTile(
+            AppCircle(
                 app = app,
                 onClick = { onOpen(app) },
-                modifier = if (index == 0) Modifier.focusRequester(firstTile) else Modifier,
+                modifier = if (index == 0) Modifier.focusRequester(firstApp) else Modifier,
             )
         }
     }
 
     LaunchedEffect(apps.isNotEmpty()) {
-        if (apps.isNotEmpty()) firstTile.requestFocus()
+        if (apps.isNotEmpty()) firstApp.requestFocus()
     }
 }
 
 @Composable
-private fun AppTile(app: AppEntry, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    Card(
-        onClick = onClick,
-        modifier = modifier.aspectRatio(16f / 9f),
-    ) {
-        if (app.banner != null) {
-            Image(
-                bitmap = app.banner,
-                contentDescription = app.label,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize(),
-            )
-        } else {
-            IconWithName(app)
+private fun AppCircle(app: AppEntry, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val focused by interactionSource.collectIsFocusedAsState()
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.width(CircleSize)) {
+        Surface(
+            onClick = onClick,
+            shape = ClickableSurfaceDefaults.shape(CircleShape),
+            colors = ClickableSurfaceDefaults.colors(containerColor = Color.DarkGray, focusedContainerColor = Color.DarkGray),
+            border = ClickableSurfaceDefaults.border(focusedBorder = Border(BorderStroke(3.dp, Color.White))),
+            interactionSource = interactionSource,
+            modifier = modifier.size(CircleSize),
+        ) {
+            app.icon?.let {
+                Image(bitmap = it, contentDescription = app.label, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
+            }
         }
-    }
-}
-
-@Composable
-private fun IconWithName(app: AppEntry) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier.fillMaxSize(),
-    ) {
-        app.icon?.let { Image(bitmap = it, contentDescription = null, modifier = Modifier.size(48.dp)) }
-        Spacer(Modifier.height(8.dp))
+        // Unbounded zodat een lange naam de cirkel niet breder maakt en de rij niet verschuift.
         Text(
             text = app.label,
             style = MaterialTheme.typography.labelLarge,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .padding(top = 12.dp)
+                .wrapContentWidth(unbounded = true)
+                .alpha(if (focused) 1f else 0f),
         )
     }
 }
