@@ -11,4 +11,8 @@
 ## 3. Check
 
 - [x] 3.1 Run `./gradlew lint assembleDebug testDebugUnitTest` and verify no errors
-- [ ] 3.2 Restart the TV and verify Bare shows (only with the user's OK, it interrupts the TV)
+- [x] 3.2 Restart the TV and verify Bare shows (only with the user's OK, it interrupts the TV)
+
+## Results (TCL Smart TV G07, 2026-10-19)
+
+- Turning the TV off and on shows Bare, tested by Wahid ("it opens and it's fast").
