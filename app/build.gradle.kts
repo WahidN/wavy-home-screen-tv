@@ -15,6 +15,16 @@ android {
         versionName = "0.1.0"
     }
 
+    buildTypes {
+        release {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
+            // Zelfde sleutel als de debug build, zodat de release als update installeert en verborgen apps blijven.
+            signingConfig = signingConfigs.getByName("debug")
+        }
+    }
+
     buildFeatures {
         compose = true
     }
