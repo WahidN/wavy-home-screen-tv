@@ -1,6 +1,7 @@
 package dev.wahid.bare
 
 import android.content.Intent
+import android.media.tv.TvContract
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,8 +18,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val apps = viewModel.apps.collectAsStateWithLifecycle().value
+            val hdmi1InputId = viewModel.hdmi1InputId.collectAsStateWithLifecycle().value
             MaterialTheme(colorScheme = darkColorScheme()) {
-                HomeScreen(apps = apps, onOpen = ::open)
+                HomeScreen(apps = apps, hdmi1InputId = hdmi1InputId, onOpen = ::open, onSwitchInput = ::switchInput)
             }
         }
     }
@@ -32,6 +34,12 @@ class MainActivity : ComponentActivity() {
         val intent = Intent(Intent.ACTION_MAIN)
             .addCategory(Intent.CATEGORY_LEANBACK_LAUNCHER)
             .setClassName(app.packageName, app.activityName)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+    }
+
+    private fun switchInput(inputId: String) {
+        val intent = Intent(Intent.ACTION_VIEW, TvContract.buildChannelUriForPassthroughInput(inputId))
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
     }

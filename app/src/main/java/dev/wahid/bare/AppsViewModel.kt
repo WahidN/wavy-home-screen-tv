@@ -14,9 +14,13 @@ class AppsViewModel(application: Application) : AndroidViewModel(application) {
     private val _apps = MutableStateFlow<List<AppEntry>>(emptyList())
     val apps: StateFlow<List<AppEntry>> = _apps
 
+    private val _hdmi1InputId = MutableStateFlow<String?>(null)
+    val hdmi1InputId: StateFlow<String?> = _hdmi1InputId
+
     fun reload() {
         viewModelScope.launch {
             _apps.value = withContext(Dispatchers.IO) { loadTvApps(getApplication()) }
+            _hdmi1InputId.value = withContext(Dispatchers.IO) { findHdmi1InputId(getApplication()) }
         }
     }
 }

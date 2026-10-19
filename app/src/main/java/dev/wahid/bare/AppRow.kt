@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.focusRestorer
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
@@ -42,7 +43,7 @@ fun AppRow(apps: List<AppEntry>, onOpen: (AppEntry) -> Unit, modifier: Modifier 
     LazyRow(
         contentPadding = PaddingValues(horizontal = 48.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(20.dp),
-        modifier = modifier,
+        modifier = modifier.focusRestorer(),
     ) {
         itemsIndexed(apps, key = { _, app -> app.packageName + "/" + app.activityName }) { index, app ->
             AppCircle(

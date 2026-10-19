@@ -2,6 +2,8 @@ package dev.wahid.bare
 
 import android.text.format.DateFormat
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -18,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.tv.material3.Button
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Surface
 import androidx.tv.material3.SurfaceDefaults
@@ -26,13 +29,25 @@ import kotlinx.coroutines.delay
 import java.util.Date
 
 @Composable
-fun HomeScreen(apps: List<AppEntry>, onOpen: (AppEntry) -> Unit) {
+fun HomeScreen(
+    apps: List<AppEntry>,
+    hdmi1InputId: String?,
+    onOpen: (AppEntry) -> Unit,
+    onSwitchInput: (String) -> Unit,
+) {
     Surface(
         colors = SurfaceDefaults.colors(containerColor = Color.Black, contentColor = Color.White),
         modifier = Modifier.fillMaxSize(),
     ) {
         Column {
-            Header(modifier = Modifier.padding(start = 48.dp, top = 40.dp, bottom = 32.dp))
+            Row(modifier = Modifier.fillMaxWidth().padding(start = 48.dp, end = 48.dp, top = 40.dp, bottom = 32.dp)) {
+                Header(modifier = Modifier.weight(1f))
+                if (hdmi1InputId != null) {
+                    Button(onClick = { onSwitchInput(hdmi1InputId) }) {
+                        Text("PlayStation")
+                    }
+                }
+            }
             AppRow(apps = apps, onOpen = onOpen)
         }
     }
