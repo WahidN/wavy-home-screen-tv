@@ -1,0 +1,40 @@
+schema: spec-driven
+
+context: |
+  Bare: a minimal, fast home screen (launcher) for Android TV.
+  Target device: TCL TV, Android 11 (API 30), D-pad remote only.
+  Tech: Kotlin, Jetpack Compose for TV (androidx.tv:tv-material), DataStore, Gradle Kotlin DSL.
+  Goals: fast, offline, no permissions, no background work, no network.
+  Owner is a web/React Native dev learning Android; keep code simple.
+  Docs: short, plain language, no em dashes.
+
+# Project context (optional)
+# This is shown to AI when creating artifacts.
+# Add your tech stack, conventions, style guides, domain knowledge, etc.
+# Example:
+#   context: |
+#     Tech stack: TypeScript, React, Node.js
+#     We use conventional commits
+#     Domain: e-commerce platform
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always include a "Non-goals" section
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
+
+# Per-operation guidance (optional)
+# Add advisory guidance for how apply and archive work should be conducted.
+# This is separate from artifact rules above.
+# Example:
+#   operations:
+#     apply:
+#       guidance:
+#         - Keep test summaries concise
+#     archive:
+#       guidance:
+#         - Summarize the archive outcome before finishing
