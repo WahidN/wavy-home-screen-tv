@@ -1,0 +1,38 @@
+package dev.wahid.bare
+
+import android.content.Intent
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.viewModels
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.tv.material3.MaterialTheme
+import androidx.tv.material3.darkColorScheme
+
+class MainActivity : ComponentActivity() {
+
+    private val viewModel: AppsViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            val apps = viewModel.apps.collectAsStateWithLifecycle().value
+            MaterialTheme(colorScheme = darkColorScheme()) {
+                AppGrid(apps = apps, onOpen = ::open)
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.reload()
+    }
+
+    private fun open(app: AppEntry) {
+        val intent = Intent(Intent.ACTION_MAIN)
+            .addCategory(Intent.CATEGORY_LEANBACK_LAUNCHER)
+            .setClassName(app.packageName, app.activityName)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+    }
+}
