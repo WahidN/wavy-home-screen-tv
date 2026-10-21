@@ -32,6 +32,7 @@ class MainActivity : ComponentActivity() {
                     onUnhide = viewModel::unhide,
                     onAppInfo = ::showAppInfo,
                     onSwitchInput = ::switchInput,
+                    onOpenSettings = ::openSettings,
                 )
             }
         }
@@ -59,6 +60,11 @@ class MainActivity : ComponentActivity() {
     private fun switchInput(inputId: String) {
         val intent = Intent(Intent.ACTION_VIEW, TvContract.buildChannelUriForPassthroughInput(inputId))
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+    }
+
+    private fun openSettings() {
+        val intent = Intent(Settings.ACTION_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
     }
 }

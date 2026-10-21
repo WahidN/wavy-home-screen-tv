@@ -39,6 +39,7 @@ fun AllAppsScreen(
     onOpen: (AppEntry) -> Unit,
     onHide: (AppEntry) -> Unit,
     onUnhide: (AppEntry) -> Unit,
+    onOpenSettings: () -> Unit,
     onDismiss: () -> Unit,
 ) {
     val allApps = remember(apps, hiddenApps) { (apps + hiddenApps).sortedBy { it.label.lowercase() } }
@@ -48,7 +49,7 @@ fun AllAppsScreen(
     Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)) {
         Surface(
             colors = SurfaceDefaults.colors(containerColor = Color.Black, contentColor = Color.White),
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().onCogKey(onOpenSettings),
         ) {
             Column(modifier = Modifier.padding(start = 48.dp, end = 48.dp, top = 40.dp)) {
                 Text(text = "All apps", style = MaterialTheme.typography.displaySmall)
