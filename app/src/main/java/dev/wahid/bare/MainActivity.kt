@@ -2,7 +2,9 @@ package dev.wahid.bare
 
 import android.content.Intent
 import android.media.tv.TvContract
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -28,6 +30,7 @@ class MainActivity : ComponentActivity() {
                     onOpen = ::open,
                     onHide = viewModel::hide,
                     onUnhide = viewModel::unhide,
+                    onAppInfo = ::showAppInfo,
                     onSwitchInput = ::switchInput,
                 )
             }
@@ -43,6 +46,12 @@ class MainActivity : ComponentActivity() {
         val intent = Intent(Intent.ACTION_MAIN)
             .addCategory(Intent.CATEGORY_LEANBACK_LAUNCHER)
             .setClassName(app.packageName, app.activityName)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+    }
+
+    private fun showAppInfo(app: AppEntry) {
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", app.packageName, null))
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
     }
