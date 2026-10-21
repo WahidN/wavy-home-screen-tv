@@ -38,9 +38,10 @@ fun HomeScreen(
     onOpen: (AppEntry) -> Unit,
     onHide: (AppEntry) -> Unit,
     onUnhide: (AppEntry) -> Unit,
+    onAppInfo: (AppEntry) -> Unit,
     onSwitchInput: (String) -> Unit,
 ) {
-    var appToHide by remember { mutableStateOf<AppEntry?>(null) }
+    var menuApp by remember { mutableStateOf<AppEntry?>(null) }
     var showAllApps by remember { mutableStateOf(false) }
 
     BackHandler {}
@@ -61,20 +62,24 @@ fun HomeScreen(
             AppRow(
                 apps = apps,
                 onOpen = onOpen,
-                onLongPress = { appToHide = it },
+                onLongPress = { menuApp = it },
                 onOpenAllApps = { showAllApps = true },
             )
         }
     }
 
-    appToHide?.let { app ->
-        HideAppDialog(
+    menuApp?.let { app ->
+        AppMenuDialog(
             app = app,
             onHide = {
                 onHide(app)
-                appToHide = null
+                menuApp = null
             },
-            onDismiss = { appToHide = null },
+            onAppInfo = {
+                onAppInfo(app)
+                menuApp = null
+            },
+            onDismiss = { menuApp = null },
         )
     }
 

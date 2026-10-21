@@ -29,13 +29,14 @@ import androidx.tv.material3.SurfaceDefaults
 import androidx.tv.material3.Text
 
 @Composable
-fun HideAppDialog(app: AppEntry, onHide: () -> Unit, onDismiss: () -> Unit) {
+fun AppMenuDialog(app: AppEntry, onHide: () -> Unit, onAppInfo: () -> Unit, onDismiss: () -> Unit) {
     val cancelButton = remember { FocusRequester() }
 
     DialogCard(onDismiss = onDismiss) {
-        Text(text = "Hide ${app.label}?", style = MaterialTheme.typography.titleLarge)
+        Text(text = app.label, style = MaterialTheme.typography.titleLarge)
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.padding(top = 24.dp)) {
             Button(onClick = onHide) { Text("Hide") }
+            Button(onClick = onAppInfo) { Text("App info") }
             OutlinedButton(onClick = onDismiss, modifier = Modifier.focusRequester(cancelButton)) { Text("Cancel") }
         }
     }
